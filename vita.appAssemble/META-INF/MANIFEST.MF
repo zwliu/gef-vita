@@ -5,6 +5,7 @@ Bundle-SymbolicName: vita.appAssemble; singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: vita.appassemble.Activator
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.eclipse.gef
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

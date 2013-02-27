@@ -19,5 +19,15 @@
             id="vita.appAssemble.perspective">
       </perspective>
    </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="vita.appassemble.editor.AppAssembleEditor"
+            default="true"
+            icon="icons/sample.gif"
+            id="vita.appassemble.editor.AppAssembleEditor"
+            name="AppAssembleEditor">
+      </editor>
+   </extension>
 
 </plugin>
