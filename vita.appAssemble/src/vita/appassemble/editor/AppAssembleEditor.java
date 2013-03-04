@@ -4,6 +4,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.dnd.TemplateTransferDragSourceListener;
+import org.eclipse.gef.palette.CombinedTemplateCreationEntry;
 import org.eclipse.gef.palette.CreationToolEntry;
 import org.eclipse.gef.palette.MarqueeToolEntry;
 import org.eclipse.gef.palette.PaletteGroup;
@@ -42,11 +44,17 @@ public class AppAssembleEditor extends GraphicalEditorWithPalette {
 		
 		PaletteGroup nodeGroup = new PaletteGroup("Creation d'elements");
 		root.add(nodeGroup);
-		nodeGroup.add(new CreationToolEntry("APP", "Creation d'un APP type", new NodeCreationFactory(APP.class), null, null));
-		nodeGroup.add(new CreationToolEntry("VOM", "Creation d'un VOM type", new NodeCreationFactory(VOM.class), null, null));
+		nodeGroup.add(new CombinedTemplateCreationEntry("APP", "Create APP type", APP.class, new NodeCreationFactory(APP.class), null, null));
+		nodeGroup.add(new CombinedTemplateCreationEntry("VOM", "Create VOM type", VOM.class, new NodeCreationFactory(VOM.class), null, null));
 		
 		root.setDefaultEntry(selectionToolEntry);
 		return root;
+	}
+	
+	@Override
+	protected void initializePaletteViewer() {
+		super.initializePaletteViewer();
+		getPaletteViewer().addDragSourceListener( new TemplateTransferDragSourceListener(getPaletteViewer()));
 	}
 
 	@Override
@@ -61,6 +69,7 @@ public class AppAssembleEditor extends GraphicalEditorWithPalette {
 		app.setLayout(new Rectangle(20, 20, -1, 150));
 		vom.setLayout(new Rectangle(20, 20, -1,-1));
 		viewer.setContents(node);
+		viewer.addDropTargetListener(new MyTemplateTransferDropTargetListener(viewer));
 	}
 	
 	@Override

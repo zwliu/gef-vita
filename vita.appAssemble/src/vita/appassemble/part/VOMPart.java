@@ -17,7 +17,7 @@ public class VOMPart extends NodePart {
 	@Override
 	protected void createEditPolicies() {
 		// TODO Auto-generated method stub
-		
+		super.createEditPolicies();	//½ö½öÊÇlayout
 	}
 	
 	@Override
