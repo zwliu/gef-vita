@@ -1,10 +1,21 @@
 package vita.appassemble.editor;
 
+import java.io.File;
+import java.io.FileOutputStream;
+
+import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.core.resources.IFile;
+
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.SWTGraphics;
+import org.eclipse.draw2d.Viewport;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.dnd.TemplateTransferDragSourceListener;
+import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.palette.CombinedTemplateCreationEntry;
 import org.eclipse.gef.palette.MarqueeToolEntry;
 import org.eclipse.gef.palette.PaletteGroup;
@@ -12,6 +23,13 @@ import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.palette.PaletteSeparator;
 import org.eclipse.gef.palette.SelectionToolEntry;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithPalette;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.widgets.Display;
 
 import vita.appassemble.factory.NodeCreationFactory;
 import vita.appassemble.factory.PartCreationFactory;
@@ -81,7 +99,40 @@ public class AppAssembleEditor extends GraphicalEditorWithPalette {
 	@Override
 	public void doSave(IProgressMonitor monitor) {
 		// TODO Auto-generated method stub
-		
+//		IFile file = ((IFileEditorInput)getEditorInput()).getFile();
+//		File currentFile = file.getLocation().toFile();	 
+//		String fileName = currentFile.getName(); 		
+//		System.out.println(file.getProject().getFullPath().append(fileName+".png").toPortableString());
+		toPicture(getGraphicalViewer(), "E:/1.png", SWT.IMAGE_PNG);
+	}
+	
+	static public void toPicture(GraphicalViewer viewer, String location, int format) {
+		try{
+			File file = new File(location);
+			if(file.exists()) {
+				if(!MessageDialog.openQuestion(null, "保存图片", "该文件已经存在，是否覆盖它？")) {
+					return;
+				}
+			}
+			else
+				file.createNewFile();
+			FileOutputStream fos = new FileOutputStream(file);
+			
+			IFigure figure = ((AbstractGraphicalEditPart)viewer.getRootEditPart()).getFigure();
+			if(figure instanceof Viewport)
+				((Viewport)figure).setViewLocation(0, 0);
+			Dimension size = figure.getPreferredSize();
+			Image image = new Image(Display.getDefault(), size.width, size.height);
+			GC gc = new GC(image);
+			SWTGraphics graphics = new SWTGraphics(gc);   
+			figure.paint(graphics);
+			ImageLoader loader = new ImageLoader();   
+			loader.data = new ImageData[] {image.getImageData()};   
+			loader.save(fos, format);   
+			fos.close();  
+		}catch(Exception e) {
+			e.printStackTrace();   
+		}
 	}
 
 }
