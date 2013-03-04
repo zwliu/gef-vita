@@ -29,7 +29,7 @@ private Label name;
 		this.name.setText(name);
 	}
 	
-	public void setLayout(Rectangle constraint) {
+	public void setLayout(Object constraint) {
 		getParent().setConstraint(this, constraint);
 	}
 	

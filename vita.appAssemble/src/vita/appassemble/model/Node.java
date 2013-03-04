@@ -10,7 +10,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 public class Node {
 
 	private List<Object> children = new ArrayList<Object>();
-	private Rectangle layout = new Rectangle();
+	private Object layout = new Rectangle();
 	private PropertyChangeSupport listeners = new PropertyChangeSupport(this);
 	public static final String PROPERTY_LAYOUT = "NodeLayout";
 	public static final String PROPERTY_ADD = "NodeAddChild";
@@ -34,13 +34,13 @@ public class Node {
 		return children;
 	}
 	
-	public void setLayout(Rectangle rec) {
-		Rectangle old = layout;
+	public void setLayout(Object rec) {
+		Object old = layout;
 		layout = rec;
 		listeners.firePropertyChange(PROPERTY_LAYOUT, old, layout);
 	}
 	
-	public Rectangle getLayout() {
+	public Object getLayout() {
 		return layout;
 	}
 	

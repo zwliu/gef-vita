@@ -5,7 +5,6 @@ import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.ToolbarLayout;
-import org.eclipse.draw2d.geometry.Rectangle;
 
 public class VOMFigure extends Figure {
 	
@@ -27,7 +26,7 @@ public class VOMFigure extends Figure {
 		this.name.setText(name);
 	}
 	
-	public void setLayout(Rectangle constraint) {
+	public void setLayout(Object constraint) {
 		getParent().setConstraint(this, constraint);
 	}
 	
