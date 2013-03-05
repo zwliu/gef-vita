@@ -8,13 +8,16 @@ public class NodeChangeLayoutCommand extends Command {
 	
 	private Node model = null;
 	private Object layout = null;
+	private Object oldLayout = null;
 	
 	public void setModel(Object model) {
-		if(model instanceof Node)
+		if(model instanceof Node) {
 			this.model = (Node) model;
+			oldLayout = ((Node) model).getLayout();
+		}
 	}
 	
-	public void setConstraint(Object constraint) {
+	public void setConstraint(Object constraint) {	
 		this.layout = constraint;
 	}
 	
@@ -28,5 +31,10 @@ public class NodeChangeLayoutCommand extends Command {
 	@Override
 	public void execute() {
 		 model.setLayout(layout);
+	}
+	
+	@Override
+	public void undo() {
+		model.setLayout(oldLayout);
 	}
 }

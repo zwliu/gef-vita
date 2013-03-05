@@ -23,6 +23,7 @@
          point="org.eclipse.ui.editors">
       <editor
             class="vita.appassemble.editor.AppAssembleEditor"
+            contributorClass="vita.appassemble.contributor.AppAssembleActiobBarContributor"
             default="true"
             icon="icons/sample.gif"
             id="vita.appassemble.editor.AppAssembleEditor"
