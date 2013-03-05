@@ -2,6 +2,7 @@ package vita.appassemble.editor;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.core.resources.IFile;
@@ -16,12 +17,16 @@ import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.dnd.TemplateTransferDragSourceListener;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.gef.editparts.ScalableRootEditPart;
+import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.palette.CombinedTemplateCreationEntry;
 import org.eclipse.gef.palette.MarqueeToolEntry;
 import org.eclipse.gef.palette.PaletteGroup;
 import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.palette.PaletteSeparator;
 import org.eclipse.gef.palette.SelectionToolEntry;
+import org.eclipse.gef.ui.actions.ZoomInAction;
+import org.eclipse.gef.ui.actions.ZoomOutAction;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithPalette;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -94,6 +99,26 @@ public class AppAssembleEditor extends GraphicalEditorWithPalette {
 		super.configureGraphicalViewer();
 		GraphicalViewer viewer = getGraphicalViewer();
 		viewer.setEditPartFactory(new PartCreationFactory());
+		ScalableRootEditPart rootEditPart = new ScalableRootEditPart(); 
+		viewer.setRootEditPart(rootEditPart);
+		
+		double[] zoomLevels = new double[] {0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 2.5, 3.0, 4.0, 5.0, 10.0, 20.0};
+		ArrayList<String> zoomContributions = new ArrayList<String>();
+		zoomContributions.add(ZoomManager.FIT_ALL);
+		zoomContributions.add(ZoomManager.FIT_HEIGHT);
+		zoomContributions.add(ZoomManager.FIT_WIDTH);
+		ZoomManager manager = rootEditPart.getZoomManager();
+		manager.setZoomLevels(zoomLevels);
+		manager.setZoomLevelContributions(zoomContributions);
+		getActionRegistry().registerAction(new ZoomInAction(manager));
+		getActionRegistry().registerAction(new ZoomOutAction(manager));
+	}
+	
+	@Override
+	public Object getAdapter(Class type) {
+		if(type == ZoomManager.class)
+			return ((ScalableRootEditPart)getGraphicalViewer().getRootEditPart()).getZoomManager();
+		return super.getAdapter(type);
 	}
 
 	@Override
