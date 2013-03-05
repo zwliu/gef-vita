@@ -10,6 +10,7 @@ import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 
 import vita.appassemble.figure.NodeFigure;
 import vita.appassemble.model.Node;
+import vita.appassemble.policy.NodeDeleteEditPolicy;
 import vita.appassemble.policy.NodeLayoutEditPolicy;
 
 public class NodePart extends AbstractGraphicalEditPart implements PropertyChangeListener {
@@ -24,6 +25,7 @@ public class NodePart extends AbstractGraphicalEditPart implements PropertyChang
 	protected void createEditPolicies() {
 		// TODO Auto-generated method stub
 		installEditPolicy(EditPolicy.LAYOUT_ROLE, new NodeLayoutEditPolicy());
+		installEditPolicy(EditPolicy.COMPONENT_ROLE, new NodeDeleteEditPolicy());
 	}
 	
 	@Override
