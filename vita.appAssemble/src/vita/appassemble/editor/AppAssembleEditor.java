@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 import org.eclipse.ui.IFileEditorInput;
+import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.core.resources.IFile;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -15,6 +16,10 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.GraphicalViewer;
+import org.eclipse.gef.KeyHandler;
+import org.eclipse.gef.KeyStroke;
+import org.eclipse.gef.MouseWheelHandler;
+import org.eclipse.gef.MouseWheelZoomHandler;
 import org.eclipse.gef.dnd.TemplateTransferDragSourceListener;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editparts.ScalableRootEditPart;
@@ -25,6 +30,7 @@ import org.eclipse.gef.palette.PaletteGroup;
 import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.palette.PaletteSeparator;
 import org.eclipse.gef.palette.SelectionToolEntry;
+import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.actions.ZoomInAction;
 import org.eclipse.gef.ui.actions.ZoomOutAction;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithPalette;
@@ -112,6 +118,15 @@ public class AppAssembleEditor extends GraphicalEditorWithPalette {
 		manager.setZoomLevelContributions(zoomContributions);
 		getActionRegistry().registerAction(new ZoomInAction(manager));
 		getActionRegistry().registerAction(new ZoomOutAction(manager));
+		
+		KeyHandler keyHandler = new KeyHandler();
+		keyHandler.put(KeyStroke.getPressed((char)26, (int)'z', SWT.CTRL), getActionRegistry().getAction(ActionFactory.UNDO.getId()));
+		keyHandler.put(KeyStroke.getPressed(SWT.DEL, 127, 0), getActionRegistry().getAction(ActionFactory.DELETE.getId()));
+		keyHandler.put(KeyStroke.getPressed('+', SWT.KEYPAD_ADD, 0), getActionRegistry().getAction(GEFActionConstants.ZOOM_IN));
+		keyHandler.put(KeyStroke.getPressed('-', SWT.KEYPAD_SUBTRACT, 0), getActionRegistry().getAction(GEFActionConstants.ZOOM_OUT));
+
+		viewer.setProperty( MouseWheelHandler.KeyGenerator.getKey(SWT.NONE), MouseWheelZoomHandler.SINGLETON); 
+		viewer.setKeyHandler(keyHandler);
 	}
 	
 	@Override
