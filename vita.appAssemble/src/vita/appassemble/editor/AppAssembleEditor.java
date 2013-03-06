@@ -4,8 +4,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.part.IPageSite;
+import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.core.resources.IFile;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -33,17 +36,23 @@ import org.eclipse.gef.palette.SelectionToolEntry;
 import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.actions.ZoomInAction;
 import org.eclipse.gef.ui.actions.ZoomOutAction;
+import org.eclipse.gef.ui.parts.ContentOutlinePage;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithPalette;
+import org.eclipse.gef.ui.parts.TreeViewer;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
 import vita.appassemble.factory.NodeCreationFactory;
 import vita.appassemble.factory.PartCreationFactory;
+import vita.appassemble.factory.TreePartCreationFactory;
 import vita.appassemble.model.APP;
 import vita.appassemble.model.Node;
 import vita.appassemble.model.VOM;
@@ -51,6 +60,44 @@ import vita.appassemble.model.VOM;
 public class AppAssembleEditor extends GraphicalEditorWithPalette {
 	
 	public final static String ID = "vita.appassemble.editor.AppAssembleEditor";
+	private Node content = null;
+	private KeyHandler keyHandler = null;
+	
+	protected class OutlinePage extends ContentOutlinePage{ 
+		
+		private SashForm sash; public OutlinePage() { 
+			super(new TreeViewer()); 
+		} 
+		
+		public void createControl(Composite parent) { 
+			sash = new SashForm(parent, SWT.VERTICAL); 
+			getViewer().createControl(sash); 
+			getViewer().setEditDomain(getEditDomain());
+			getViewer().setEditPartFactory(new TreePartCreationFactory()); 
+			getViewer().setContents(content);
+			getSelectionSynchronizer().addViewer(getViewer()); 
+		} 
+		
+		public void init(IPageSite pageSite) { 
+			super.init(pageSite); // On hook les actions de l'editeur sur la toolbar
+			IActionBars bars = getSite().getActionBars(); 
+			bars.setGlobalActionHandler(ActionFactory.UNDO.getId(), getActionRegistry().getAction(ActionFactory.UNDO.getId())); 
+			bars.setGlobalActionHandler(ActionFactory.REDO.getId(), getActionRegistry().getAction(ActionFactory.REDO.getId())); 
+			bars.setGlobalActionHandler(ActionFactory.DELETE.getId(), getActionRegistry().getAction(ActionFactory.DELETE.getId())); 
+			bars.updateActionBars(); // On associe les raccourcis clavier de l'editeur a l'outline 
+			getViewer().setKeyHandler(keyHandler); 
+		} 
+		
+		public Control getControl() { 
+			return sash; 
+		} 
+		
+		public void dispose() {
+			getSelectionSynchronizer().removeViewer(getViewer()); 
+			super.dispose(); 
+		} 
+	}
+
 	
 	public AppAssembleEditor() {
 		setEditDomain(new DefaultEditDomain(this));
@@ -89,14 +136,14 @@ public class AppAssembleEditor extends GraphicalEditorWithPalette {
 	protected void initializeGraphicalViewer() {
 		// TODO Auto-generated method stub
 		GraphicalViewer viewer = getGraphicalViewer();
-		Node node = new Node();
+		content = new Node();
 		APP app = new APP("APP ONE");
 		VOM vom = new VOM("VOM ONE");
 		app.addChild(vom);
-		node.addChild(app);
+		content.addChild(app);
 		app.setLayout(new Rectangle(20, 20, -1, 150));
 		vom.setLayout(new Rectangle(20, 20, -1,-1));
-		viewer.setContents(node);
+		viewer.setContents(content);
 		viewer.addDropTargetListener(new MyTemplateTransferDropTargetListener(viewer));
 	}
 	
@@ -119,7 +166,7 @@ public class AppAssembleEditor extends GraphicalEditorWithPalette {
 		getActionRegistry().registerAction(new ZoomInAction(manager));
 		getActionRegistry().registerAction(new ZoomOutAction(manager));
 		
-		KeyHandler keyHandler = new KeyHandler();
+		keyHandler = new KeyHandler();
 		keyHandler.put(KeyStroke.getPressed((char)26, (int)'z', SWT.CTRL), getActionRegistry().getAction(ActionFactory.UNDO.getId()));
 		keyHandler.put(KeyStroke.getPressed(SWT.DEL, 127, 0), getActionRegistry().getAction(ActionFactory.DELETE.getId()));
 		keyHandler.put(KeyStroke.getPressed('+', SWT.KEYPAD_ADD, 0), getActionRegistry().getAction(GEFActionConstants.ZOOM_IN));
@@ -133,6 +180,8 @@ public class AppAssembleEditor extends GraphicalEditorWithPalette {
 	public Object getAdapter(Class type) {
 		if(type == ZoomManager.class)
 			return ((ScalableRootEditPart)getGraphicalViewer().getRootEditPart()).getZoomManager();
+		else if(type == IContentOutlinePage.class)
+			return new OutlinePage();
 		return super.getAdapter(type);
 	}
 
