@@ -13,14 +13,17 @@ import org.eclipse.core.resources.IFile;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.LightweightSystem;
 import org.eclipse.draw2d.SWTGraphics;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.draw2d.parts.ScrollableThumbnail;
 import org.eclipse.gef.DefaultEditDomain;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.KeyHandler;
 import org.eclipse.gef.KeyStroke;
+import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.MouseWheelHandler;
 import org.eclipse.gef.MouseWheelZoomHandler;
 import org.eclipse.gef.dnd.TemplateTransferDragSourceListener;
@@ -42,10 +45,13 @@ import org.eclipse.gef.ui.parts.TreeViewer;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -65,6 +71,9 @@ public class AppAssembleEditor extends GraphicalEditorWithPalette {
 	
 	protected class OutlinePage extends ContentOutlinePage{ 
 		
+		private ScrollableThumbnail thumbnail; 
+		private DisposeListener disposeListener;
+		
 		private SashForm sash; public OutlinePage() { 
 			super(new TreeViewer()); 
 		} 
@@ -76,6 +85,22 @@ public class AppAssembleEditor extends GraphicalEditorWithPalette {
 			getViewer().setEditPartFactory(new TreePartCreationFactory()); 
 			getViewer().setContents(content);
 			getSelectionSynchronizer().addViewer(getViewer()); 
+			
+			Canvas canvas = new Canvas(sash, SWT.BORDER);
+			LightweightSystem lws = new LightweightSystem(canvas);
+			thumbnail = new ScrollableThumbnail((Viewport)((ScalableRootEditPart)getGraphicalViewer().getRootEditPart()).getFigure());
+			thumbnail.setSource(((ScalableRootEditPart)getGraphicalViewer().getRootEditPart()).getLayer(LayerConstants.PRINTABLE_LAYERS));
+			lws.setContents(thumbnail);
+			disposeListener = new DisposeListener() { 
+				@Override 
+				public void widgetDisposed(DisposeEvent e) { 
+					if (thumbnail != null) { 
+						thumbnail.deactivate(); 
+						thumbnail = null; 
+					} 
+				} 
+			};
+			getGraphicalViewer().getControl().addDisposeListener(disposeListener);
 		} 
 		
 		public void init(IPageSite pageSite) { 
@@ -94,6 +119,8 @@ public class AppAssembleEditor extends GraphicalEditorWithPalette {
 		
 		public void dispose() {
 			getSelectionSynchronizer().removeViewer(getViewer()); 
+			if (getGraphicalViewer().getControl() != null && !getGraphicalViewer().getControl().isDisposed()) 
+				getGraphicalViewer().getControl().removeDisposeListener(disposeListener);
 			super.dispose(); 
 		} 
 	}
