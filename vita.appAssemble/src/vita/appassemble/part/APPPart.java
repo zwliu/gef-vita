@@ -1,5 +1,6 @@
 package vita.appassemble.part;
 
+import java.beans.PropertyChangeEvent;
 import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
@@ -28,11 +29,21 @@ public class APPPart extends NodePart {
 		APP model = (APP)getModel();
 		figure.setName(model.getName());
 		figure.setLayout(model.getLayout());
+		figure.setBackgroundColor(model.getColor());
 	}
 	
 	@Override
 	public List<Object> getModelChildren() {
 		return ((APP)getModel()).getChildren();
+	}
+	
+	@Override
+	public void propertyChange(PropertyChangeEvent arg0) {
+		super.propertyChange(arg0);
+		if(arg0.getPropertyName().equals(APP.PROPERTY_COLOR))
+			refreshVisuals();
+		else if(arg0.getPropertyName().equals(APP.PROPERTY_NAME))
+			refreshVisuals();
 	}
 
 }

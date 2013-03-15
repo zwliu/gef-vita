@@ -4,8 +4,15 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
+import org.eclipse.gef.DragTracker;
+import org.eclipse.gef.Request;
+import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.editparts.AbstractTreeEditPart;
+import org.eclipse.gef.tools.SelectEditPartTracker;
+import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import vita.appassemble.model.APP;
@@ -54,6 +61,24 @@ public class NodeTreePart extends AbstractTreeEditPart implements PropertyChange
 			VOM model = (VOM)obj;
 			setWidgetText(model.getName()); 
 			setWidgetImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_DEF_VIEW));
+		}
+	}
+	
+	@Override
+	public DragTracker getDragTracker(Request req) {
+		return new SelectEditPartTracker(this);
+	}
+	
+	@Override
+	public void performRequest(Request req) {
+		if(req.getType().equals(RequestConstants.REQ_OPEN)) {
+			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			try {
+				page.showView(IPageLayout.ID_PROP_SHEET);
+			} catch (PartInitException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

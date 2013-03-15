@@ -6,7 +6,13 @@ import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gef.EditPolicy;
+import org.eclipse.gef.Request;
+import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
+import org.eclipse.ui.IPageLayout;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 
 import vita.appassemble.figure.NodeFigure;
 import vita.appassemble.model.Node;
@@ -55,6 +61,19 @@ public class NodePart extends AbstractGraphicalEditPart implements PropertyChang
 	public void deactivate() {
 		super.deactivate();
 		((Node)getModel()).removePropertyChangeListener(this);
+	}
+	
+	@Override
+	public void performRequest(Request req) {
+		if(req.getType().equals(RequestConstants.REQ_OPEN)) {
+			IWorkbenchPage page =  PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			try {
+				page.showView(IPageLayout.ID_PROP_SHEET);
+			} catch (PartInitException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 }
