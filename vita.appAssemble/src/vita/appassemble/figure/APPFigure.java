@@ -3,9 +3,12 @@ package vita.appassemble.figure;
 import org.eclipse.draw2d.AbstractBackground;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
+import org.eclipse.draw2d.FrameBorder;
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.GroupBoxBorder;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.LineBorder;
+import org.eclipse.draw2d.TitleBarBorder;
 import org.eclipse.draw2d.XYLayout;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -32,7 +35,7 @@ public class APPFigure extends Figure {
 		setConstraint(name, new Rectangle(0, 0, -1, -1));
 		
 		setBackgroundColor(ColorConstants.yellow);
-		setBorder(new LineBorder(1));
+		setBorder(new TitleBarBorder());//LineBorder(1));
 		setOpaque(true);
 	}
 	

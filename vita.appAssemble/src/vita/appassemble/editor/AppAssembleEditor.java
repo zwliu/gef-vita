@@ -62,6 +62,7 @@ import vita.appassemble.factory.TreePartCreationFactory;
 import vita.appassemble.model.APP;
 import vita.appassemble.model.Node;
 import vita.appassemble.model.VOM;
+import vita.appassemble.model.VitaEvent;
 
 public class AppAssembleEditor extends GraphicalEditorWithPalette {
 	
@@ -166,10 +167,13 @@ public class AppAssembleEditor extends GraphicalEditorWithPalette {
 		content = new Node();
 		APP app = new APP("APP ONE");
 		VOM vom = new VOM("VOM ONE");
+		VitaEvent event = new VitaEvent("Event one");
 		app.addChild(vom);
 		content.addChild(app);
+		content.addChild(event);
 		app.setLayout(new Rectangle(20, 20, -1, 150));
 		vom.setLayout(new Rectangle(20, 20, -1,-1));
+		event.setLayout(new Rectangle(100, 100, 100, 100));
 		viewer.setContents(content);
 		viewer.addDropTargetListener(new MyTemplateTransferDropTargetListener(viewer));
 	}
