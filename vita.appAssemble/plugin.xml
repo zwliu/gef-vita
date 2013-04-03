@@ -7,7 +7,7 @@
          point="org.eclipse.core.runtime.applications">
       <application>
          <run
-               class="vita.appassemble.Application">
+               class="com.casa.vide.appassemble.Application">
          </run>
       </application>
    </extension>
@@ -15,15 +15,15 @@
          point="org.eclipse.ui.perspectives">
       <perspective
             name="RCP Perspective"
-            class="vita.appassemble.Perspective"
+            class="com.casa.vide.appassemble.Perspective"
             id="vita.appAssemble.perspective">
       </perspective>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="vita.appassemble.editor.AppAssembleEditor"
-            contributorClass="vita.appassemble.contributor.AppAssembleActiobBarContributor"
+            class="com.casa.vide.appassemble.editor.AppAssembleEditor"
+            contributorClass="com.casa.vide.appassemble.contributor.AppAssembleActiobBarContributor"
             default="true"
             icon="icons/sample.gif"
             id="vita.appassemble.editor.AppAssembleEditor"
