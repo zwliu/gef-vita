@@ -47,6 +47,7 @@ import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.actions.ZoomInAction;
 import org.eclipse.gef.ui.actions.ZoomOutAction;
 import org.eclipse.gef.ui.palette.PaletteViewer;
+import org.eclipse.gef.ui.palette.PaletteViewerProvider;
 import org.eclipse.gef.ui.parts.ContentOutlinePage;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithPalette;
@@ -167,10 +168,9 @@ public class AppAssembleEditor extends GraphicalEditorWithFlyoutPalette {
 		//PaletteSeparator separator3 = new PaletteSeparator();
 		//root.add(separator3);
 		
-		PaletteDrawer imageLib = new PaletteDrawer("图片库");
-		root.add(imageLib);
-		ImageLibrary imgLib = new ImageLibrary();
-		for(File file : imgLib.getImages()) {			
+		PaletteDrawer imageLib = new PaletteDrawer(ImageLibrary.label);
+		root.add(imageLib);		
+		for(File file : ImageLibrary.getImages()) {			
 			Image img = new Image(Display.getDefault(), file.getPath());
 			Image small = new Image(null, img.getImageData().scaledTo(20, 20));
 			Image large = new Image(null, img.getImageData().scaledTo(40, 40));
@@ -181,6 +181,11 @@ public class AppAssembleEditor extends GraphicalEditorWithFlyoutPalette {
 		
 		root.setDefaultEntry(selectionToolEntry);
 		return root;
+	}
+	
+	@Override
+	public PaletteViewerProvider createPaletteViewerProvider() {
+		return new MenuPaletteProvider(getEditDomain());
 	}
 	
 	//@Override

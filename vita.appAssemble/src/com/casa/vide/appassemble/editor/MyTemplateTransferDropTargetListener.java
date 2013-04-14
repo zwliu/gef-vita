@@ -18,9 +18,9 @@ public class MyTemplateTransferDropTargetListener extends TemplateTransferDropTa
 	
 	@Override
 	public CreationFactory getFactory(Object template) {
-		if(template == Image.class)
-			return null;//new NodeCreationFactory();
-		else
+//		if(template == Image.class)
+//			return null;//new NodeCreationFactory();
+//		else
 			return new NodeCreationFactory((Class<? extends Node>)template);
 	}
 	
