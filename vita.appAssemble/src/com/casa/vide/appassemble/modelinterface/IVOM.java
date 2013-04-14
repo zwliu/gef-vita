@@ -4,7 +4,7 @@ import java.util.Vector;
 
 public interface IVOM {
 	/** 获取VOM名称*/
-	String getVOMName();
+	String getName();
 	
 	/** 获取VOM实例名*/
 	String getInstanceName();

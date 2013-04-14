@@ -21,7 +21,7 @@ public class APPPart extends NodePart {
 	@Override
 	protected void createEditPolicies() {
 		// TODO Auto-generated method stub
-		super.createEditPolicies();  	//½ö½öÊÇlayout
+		super.createEditPolicies();  	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½layout
 	}
 	
 	@Override
@@ -30,7 +30,8 @@ public class APPPart extends NodePart {
 		APP model = (APP)getModel();
 		figure.setName(model.getName());
 		figure.setLayout(model.getLayout());
-		figure.setBackgroundColor(model.getColor());
+		//figure.setBackgroundColor(model.getColor());
+		figure.setBackgroundColor(model.getBackground());
 	}
 	
 	@Override
@@ -41,7 +42,7 @@ public class APPPart extends NodePart {
 	@Override
 	public void propertyChange(PropertyChangeEvent arg0) {
 		super.propertyChange(arg0);
-		if(arg0.getPropertyName().equals(APP.PROPERTY_COLOR))
+		if(/*arg0.getPropertyName().equals(APP.PROPERTY_COLOR) || */(arg0.getPropertyName().equals(APP.PROPERTY_BACKGROUND)))
 			refreshVisuals();
 		else if(arg0.getPropertyName().equals(APP.PROPERTY_NAME))
 			refreshVisuals();

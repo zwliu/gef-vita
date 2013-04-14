@@ -13,6 +13,6 @@ public interface IAPP {
 	String getMonitorOpen();
 	
 	/** 获得TimeRegulation的值*/
-	int getTimeRegulation();
+	String getTimeRegulation();
 	
 }

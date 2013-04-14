@@ -5,9 +5,12 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.swt.graphics.Image;
 
+import com.casa.vide.appassemble.command.NodeChangeBackgroundCommand;
 import com.casa.vide.appassemble.command.NodeChangeLayoutCommand;
 import com.casa.vide.appassemble.command.NodeCreateCommand;
+import com.casa.vide.appassemble.model.APP;
 import com.casa.vide.appassemble.model.Node;
 
 
@@ -16,22 +19,26 @@ public class NodeLayoutEditPolicy extends XYLayoutEditPolicy {
 	@Override
 	protected Command getCreateCommand(CreateRequest request) {
 		// TODO Auto-generated method stub
-		NodeCreateCommand command = null;
+		Command command = null;
 		if(request.getType() == REQ_CREATE) {
-			//°üº¬¹æÔò£¿£¿£¿£¿
-			command = new NodeCreateCommand();
 			Object parent = getHost().getModel();
 			Object child = request.getNewObject();
-			if(parent instanceof Node)
-				command.setParent((Node)parent);
-			if(child instanceof Node)
-				command.setChild((Node)child);
-			Rectangle constraint = (Rectangle)getConstraintFor(request);
-			constraint.x = constraint.x < 0 ? 0 : constraint.x;
-			constraint.y = constraint.y < 0 ? 0 : constraint.y;
-			constraint.width = constraint.width < 0 ? 100/*ÔÝÊ±¶¨100*/  : constraint.width;
-			constraint.height = constraint.height < 0 ? 100 : constraint.height;
-			command.setLayout(constraint);
+			if(parent instanceof APP && child instanceof Image) {
+				command = new NodeChangeBackgroundCommand(); 
+				((NodeChangeBackgroundCommand)command).setNode((APP)parent);
+				((NodeChangeBackgroundCommand)command).setBackground((Image)child);
+			}
+			else if(parent instanceof Node && child instanceof Node) {
+				command = new NodeCreateCommand();
+				((NodeCreateCommand)command).setParent((Node)parent);
+				((NodeCreateCommand)command).setChild((Node)child);
+				Rectangle constraint = (Rectangle)getConstraintFor(request); //å½“å»ºappä¸Žvomæœ‰é‡å æ—¶å‡ºçŽ°å¼‚å¸¸
+				constraint.x = constraint.x < 0 ? 0 : constraint.x;
+				constraint.y = constraint.y < 0 ? 0 : constraint.y;
+				constraint.width = constraint.width < 0 ? 100/*ï¿½ï¿½Ê±ï¿½ï¿½100*/  : constraint.width;
+				constraint.height = constraint.height < 0 ? 100 : constraint.height;
+				((NodeCreateCommand)command).setLayout(constraint);
+			}
 		}
 		return command;
 	}

@@ -22,11 +22,7 @@ import com.casa.vide.appassemble.Activator;
 public class APPFigure extends Figure {
 	
 	private Label name;
-	private static Image background = null;
-	static {
-		ImageDescriptor imageDes = AbstractUIPlugin.imageDescriptorFromPlugin(Activator.PLUGIN_ID,"/icons/alt_about.gif");
-		background = imageDes.createImage();
-	}
+	private Image background = null;
 	
 	public APPFigure() {
 		XYLayout layout = new XYLayout();
@@ -48,22 +44,27 @@ public class APPFigure extends Figure {
 		getParent().setConstraint(this, constraint);
 	}
 	
-	public void setBackgroundColor(Color bgColor) {
-		super.setBackgroundColor(bgColor);
+//	public void setBackgroundColor(Color bgColor) {
+//		super.setBackgroundColor(bgColor);
+//	}
+	
+	public void setBackgroundColor(Image background) {
+		this.background = background;
+		repaint();
 	}
 	
-//	@Override
-//	protected void paintFigure(Graphics graphics) {
-//		if (isOpaque()) {
-//			if(background != null) {
-//				Rectangle area = getClientArea();
-//				org.eclipse.swt.graphics.Rectangle imageArea = background.getBounds();
-//				graphics.drawImage(background, imageArea.x, imageArea.y, imageArea.width, imageArea.height, area.x, area.y, area.width, area.height);
-//			}
-//		}
-//		if (getBorder() instanceof AbstractBackground)
-//			((AbstractBackground) getBorder()).paintBackground(this, graphics,
-//					NO_INSETS);
-//	}
+	@Override
+	protected void paintFigure(Graphics graphics) {
+		if (isOpaque()) {
+			if(background != null) {
+				Rectangle area = getClientArea();
+				org.eclipse.swt.graphics.Rectangle imageArea = background.getBounds();
+				graphics.drawImage(background, imageArea.x, imageArea.y, imageArea.width, imageArea.height, area.x, area.y, area.width, area.height);
+			}
+		}
+		if (getBorder() instanceof AbstractBackground)
+			((AbstractBackground) getBorder()).paintBackground(this, graphics,
+					NO_INSETS);
+	}
 	
 }

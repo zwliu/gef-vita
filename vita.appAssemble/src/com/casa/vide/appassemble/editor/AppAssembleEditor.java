@@ -1,8 +1,12 @@
 package com.casa.vide.appassemble.editor;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IFileEditorInput;
@@ -32,17 +36,23 @@ import org.eclipse.gef.editparts.ScalableRootEditPart;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.palette.CombinedTemplateCreationEntry;
 import org.eclipse.gef.palette.MarqueeToolEntry;
+import org.eclipse.gef.palette.PaletteContainer;
+import org.eclipse.gef.palette.PaletteDrawer;
 import org.eclipse.gef.palette.PaletteGroup;
 import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.palette.PaletteSeparator;
+import org.eclipse.gef.palette.PaletteToolbar;
 import org.eclipse.gef.palette.SelectionToolEntry;
 import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.actions.ZoomInAction;
 import org.eclipse.gef.ui.actions.ZoomOutAction;
+import org.eclipse.gef.ui.palette.PaletteViewer;
 import org.eclipse.gef.ui.parts.ContentOutlinePage;
+import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithPalette;
 import org.eclipse.gef.ui.parts.TreeViewer;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeEvent;
@@ -56,16 +66,18 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
+import com.casa.vide.appassemble.factory.ImageFactory;
 import com.casa.vide.appassemble.factory.NodeCreationFactory;
 import com.casa.vide.appassemble.factory.PartCreationFactory;
 import com.casa.vide.appassemble.factory.TreePartCreationFactory;
+import com.casa.vide.appassemble.imageLibrary.ImageLibrary;
 import com.casa.vide.appassemble.model.APP;
 import com.casa.vide.appassemble.model.Node;
 import com.casa.vide.appassemble.model.VOM;
 import com.casa.vide.appassemble.model.VitaEvent;
 
 
-public class AppAssembleEditor extends GraphicalEditorWithPalette {
+public class AppAssembleEditor extends GraphicalEditorWithFlyoutPalette {
 	
 	public final static String ID = "vita.appassemble.editor.AppAssembleEditor";
 	private Node content = null;
@@ -143,27 +155,46 @@ public class AppAssembleEditor extends GraphicalEditorWithPalette {
 		manipGroup.add(new MarqueeToolEntry());
 		root.add(manipGroup);
 		
-		PaletteSeparator separator2 = new PaletteSeparator();
-		root.add(separator2);
+		//PaletteSeparator separator2 = new PaletteSeparator();
+		//root.add(separator2);
 		
-		PaletteGroup nodeGroup = new PaletteGroup("Creation d'elements");
+		//PaletteGroup nodeGroup = new PaletteGroup("Creation d'elements");
+		PaletteDrawer nodeGroup = new PaletteDrawer("æ¨¡åž‹");
 		root.add(nodeGroup);
 		nodeGroup.add(new CombinedTemplateCreationEntry("APP", "Create APP type", APP.class, new NodeCreationFactory(APP.class), null, null));
 		nodeGroup.add(new CombinedTemplateCreationEntry("VOM", "Create VOM type", VOM.class, new NodeCreationFactory(VOM.class), null, null));
+		
+		//PaletteSeparator separator3 = new PaletteSeparator();
+		//root.add(separator3);
+		
+		PaletteDrawer imageLib = new PaletteDrawer("å›¾ç‰‡åº“");
+		root.add(imageLib);
+		ImageLibrary imgLib = new ImageLibrary();
+		for(File file : imgLib.getImages()) {			
+			Image img = new Image(Display.getDefault(), file.getPath());
+			Image small = new Image(null, img.getImageData().scaledTo(20, 20));
+			Image large = new Image(null, img.getImageData().scaledTo(40, 40));
+			ImageDescriptor smallIcon = ImageDescriptor.createFromImage(small);
+			ImageDescriptor largeIcon = ImageDescriptor.createFromImage(large);
+			imageLib.add(new CombinedTemplateCreationEntry(file.getName(), null, Image.class, new ImageFactory(img), smallIcon, largeIcon));
+		}
 		
 		root.setDefaultEntry(selectionToolEntry);
 		return root;
 	}
 	
-	@Override
+	//@Override
 	protected void initializePaletteViewer() {
-		super.initializePaletteViewer();
-		getPaletteViewer().addDragSourceListener( new TemplateTransferDragSourceListener(getPaletteViewer()));
+		//super.initializePaletteViewer();
+		//getPaletteViewer().addDragSourceListener( new TemplateTransferDragSourceListener(getPaletteViewer()));
+		PaletteViewer paletteView = getEditDomain().getPaletteViewer();
+		paletteView.addDragSourceListener(new TemplateTransferDragSourceListener(paletteView));
 	}
 
 	@Override
 	protected void initializeGraphicalViewer() {
-		// TODO Auto-generated method stub
+		super.initializeGraphicalViewer();
+		initializePaletteViewer();
 		GraphicalViewer viewer = getGraphicalViewer();
 		content = new Node();
 		APP app = new APP("APP ONE");
@@ -231,7 +262,7 @@ public class AppAssembleEditor extends GraphicalEditorWithPalette {
 		try{
 			File file = new File(location);
 			if(file.exists()) {
-				if(!MessageDialog.openQuestion(null, "±£´æÍ¼Æ¬", "¸ÃÎÄ¼þÒÑ¾­´æÔÚ£¬ÊÇ·ñ¸²¸ÇËü£¿")) {
+				if(!MessageDialog.openQuestion(null, "ï¿½ï¿½ï¿½ï¿½Í¼Æ¬", "ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½Ú£ï¿½ï¿½Ç·ñ¸²¸ï¿½ï¿½ï¿½")) {
 					return;
 				}
 			}
