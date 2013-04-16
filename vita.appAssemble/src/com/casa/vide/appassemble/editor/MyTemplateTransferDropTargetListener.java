@@ -5,6 +5,7 @@ import org.eclipse.gef.dnd.TemplateTransferDropTargetListener;
 import org.eclipse.gef.requests.CreationFactory;
 import org.eclipse.swt.graphics.Image;
 
+import com.casa.vide.appassemble.factory.ImageFactory;
 import com.casa.vide.appassemble.factory.NodeCreationFactory;
 import com.casa.vide.appassemble.model.Node;
 
@@ -18,9 +19,9 @@ public class MyTemplateTransferDropTargetListener extends TemplateTransferDropTa
 	
 	@Override
 	public CreationFactory getFactory(Object template) {
-//		if(template == Image.class)
-//			return null;//new NodeCreationFactory();
-//		else
+		if(template instanceof Image)
+			return new ImageFactory((Image)template);
+		else
 			return new NodeCreationFactory((Class<? extends Node>)template);
 	}
 	

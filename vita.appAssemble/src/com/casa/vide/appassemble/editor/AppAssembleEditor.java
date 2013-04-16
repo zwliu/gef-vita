@@ -176,7 +176,7 @@ public class AppAssembleEditor extends GraphicalEditorWithFlyoutPalette {
 			Image large = new Image(null, img.getImageData().scaledTo(40, 40));
 			ImageDescriptor smallIcon = ImageDescriptor.createFromImage(small);
 			ImageDescriptor largeIcon = ImageDescriptor.createFromImage(large);
-			imageLib.add(new CombinedTemplateCreationEntry(file.getName(), null, Image.class, new ImageFactory(img), smallIcon, largeIcon));
+			imageLib.add(new CombinedTemplateCreationEntry(file.getName(), null, img, new ImageFactory(img), smallIcon, largeIcon));
 		}
 		
 		root.setDefaultEntry(selectionToolEntry);
