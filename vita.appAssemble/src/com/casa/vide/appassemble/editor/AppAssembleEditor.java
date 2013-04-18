@@ -8,6 +8,10 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.XMLWriter;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.actions.ActionFactory;
@@ -16,6 +20,8 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.core.resources.IFile;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LightweightSystem;
 import org.eclipse.draw2d.SWTGraphics;
@@ -54,6 +60,7 @@ import org.eclipse.gef.ui.parts.GraphicalEditorWithPalette;
 import org.eclipse.gef.ui.parts.TreeViewer;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.util.SafeRunnable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeEvent;
@@ -261,13 +268,15 @@ public class AppAssembleEditor extends GraphicalEditorWithFlyoutPalette {
 //		String fileName = currentFile.getName(); 		
 //		System.out.println(file.getProject().getFullPath().append(fileName+".png").toPortableString());
 		toPicture(getGraphicalViewer(), "E:/1.png", SWT.IMAGE_PNG);
+		toXML(monitor, new File("E:/1.xml"));
+		getCommandStack().markSaveLocation(); 
 	}
 	
-	static public void toPicture(GraphicalViewer viewer, String location, int format) {
+	public void toPicture(GraphicalViewer viewer, String location, int format) {
 		try{
 			File file = new File(location);
 			if(file.exists()) {
-				if(!MessageDialog.openQuestion(null, "����ͼƬ", "���ļ��Ѿ����ڣ��Ƿ񸲸���")) {
+				if(!MessageDialog.openQuestion(null, "保存图片", "图片已存在，是否覆盖？")) {
 					return;
 				}
 			}
@@ -290,6 +299,26 @@ public class AppAssembleEditor extends GraphicalEditorWithFlyoutPalette {
 		}catch(Exception e) {
 			e.printStackTrace();   
 		}
+	}
+	
+	public void toXML(IProgressMonitor monitor, final File file) {
+		SafeRunner.run(new SafeRunnable() {
+
+			@Override
+			public void run() throws Exception {
+				Document document = DocumentHelper.createDocument();
+				document.addElement("Scenario");
+				try {
+					OutputFormat format = OutputFormat.createPrettyPrint();
+					XMLWriter writer = new XMLWriter(new FileOutputStream(file),format);
+					writer.write(document);
+					writer.close();
+				}catch (Exception e) {
+					e.printStackTrace();
+				}		 
+			}
+
+		});
 	}
 
 }
