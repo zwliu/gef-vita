@@ -3,17 +3,17 @@ package com.casa.vide.appassemble.command;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.swt.graphics.Image;
 
-import com.casa.vide.appassemble.model.APP;
+import com.casa.vide.appassemble.model.Shape;
 
 public class NodeChangeBackgroundCommand extends Command {
 
-	private APP app;
+	private Shape shape;
 	private Image background;
 	private Image oldBackground;
 
-	public void setNode(APP app) {
-		oldBackground = app.getBackground();
-		this.app = app;
+	public void setNode(Shape shape) {
+		oldBackground = shape.getBackground();
+		this.shape = shape;
 	}
 
 	public void setBackground(Image background) {
@@ -22,18 +22,18 @@ public class NodeChangeBackgroundCommand extends Command {
 	
 	@Override
 	public boolean canExecute() {
-		if(app == null || background == null)
+		if(shape == null || background == null)
 			return false;
 		return true;
 	}
 	
 	@Override
 	public void execute() {
-		app.setBackground(background);
+		shape.setBackground(background);
 	}
 	
 	@Override
 	public void undo() {
-		app.setBackground(oldBackground);
+		shape.setBackground(oldBackground);
 	}
 }

@@ -55,12 +55,12 @@ public class NodeTreePart extends AbstractTreeEditPart implements PropertyChange
 		Object obj = getModel(); 
 		if(obj instanceof APP) {
 			APP model = (APP)obj;
-			setWidgetText(model.getName()); 
+			setWidgetText(model.getName()); //参数不为null
 			setWidgetImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT));
 		}
 		if(obj instanceof VOM) {
 			VOM model = (VOM)obj;
-			setWidgetText(model.getName()); 
+			setWidgetText(model.getName());   //参数不为null
 			setWidgetImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_DEF_VIEW));
 		}
 	}

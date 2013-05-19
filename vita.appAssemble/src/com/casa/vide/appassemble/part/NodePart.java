@@ -50,12 +50,15 @@ public class NodePart extends AbstractGraphicalEditPart implements PropertyChang
 		else if(name == Node.PROPERTY_LAYOUT) {
 			refreshVisuals();
 		}
+		else if(name == Node.PROPERTY_COLOR) {
+			refreshVisuals();
+		}
 	}
 	
 	@Override
 	public void activate() {
 		super.activate();
-		((Node)getModel()).addPropertyChangeListener(this);
+		((Node)getModel()).addPropertyChangeListener(this);	
 	}
 	
 	@Override

@@ -30,8 +30,7 @@ public class APPPart extends NodePart {
 		APP model = (APP)getModel();
 		figure.setName(model.getName());
 		figure.setLayout(model.getLayout());
-		//figure.setBackgroundColor(model.getColor());
-		figure.setBackgroundColor(model.getBackground());
+		figure.setBackgroundColor(model.getColor());
 	}
 	
 	@Override
@@ -40,12 +39,10 @@ public class APPPart extends NodePart {
 	}
 	
 	@Override
-	public void propertyChange(PropertyChangeEvent arg0) {
+	public void propertyChange(PropertyChangeEvent arg0) {	
+		if(arg0.getPropertyName().equals(APP.PROPERTY_NAME))
+			refreshVisuals();
 		super.propertyChange(arg0);
-		if(/*arg0.getPropertyName().equals(APP.PROPERTY_COLOR) || */(arg0.getPropertyName().equals(APP.PROPERTY_BACKGROUND)))
-			refreshVisuals();
-		else if(arg0.getPropertyName().equals(APP.PROPERTY_NAME))
-			refreshVisuals();
 	}
 
 }

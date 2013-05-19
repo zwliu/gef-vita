@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
 
 import com.casa.vide.appassemble.modelinterface.IAPP;
 import com.casa.vide.appassemble.modelinterface.IVOM;
@@ -13,23 +12,20 @@ import com.casa.vide.appassemble.modelinterface.IVOM;
 public class APP extends Node implements IAPP {
 
 	public static final String PROPERTY_NAME = "AppName";
-	public static final String PROPERTY_COLOR = "AppColor";
-	public static final String PROPERTY_BACKGROUND = "AppBackground";
+	public static final String ATTRIBUTE_MONITOROPEN = "monitor open";
+	public static final String ATTRIBUTE_TIMEREGULATION = "time regulation";
 	private String name;
 	private String monitorOpen;
 	private String timeRegulation;
 	private Map<String, IVOM> voms;
-	private Image background;
-	private Color color;
 	
 	public static Color createRandomColor() { /** Just for Fun :) **/ return new Color(null, (new Double(Math.random() * 128)).intValue() + 128 , (new Double(Math.random() * 128)).intValue() + 128 , (new Double(Math.random() * 128)).intValue() + 128 ); }
 	
 	public APP() {
 		name = null;
-		monitorOpen = null;
-		timeRegulation = null;
+		monitorOpen = "true";
+		timeRegulation = "0";
 		voms = new HashMap<String, IVOM>();
-		color = createRandomColor();
 	}
 	
 	public APP(String name) {
@@ -46,31 +42,11 @@ public class APP extends Node implements IAPP {
 	public String getName() {
 		return name;
 	}
-	
-	public Image getBackground() {
-		return background;
-	}
-
-	public void setBackground(Image background) {
-		Image oldBg = this.background;
-		this.background = background;
-		listeners.firePropertyChange(PROPERTY_BACKGROUND, oldBg, background);
-	}
-
-	public void setColor(Color color) {
-		Color oldColor = this.color;
-		this.color = color;
-		listeners.firePropertyChange(PROPERTY_COLOR, oldColor, color);
-	}
-	
-	public Color getColor() {
-		return color;
-	}
 
 	@Override
 	public Vector<String> getVomNames() {
 		// TODO Auto-generated method stub
-		return (Vector<String>) voms.keySet();  //???
+		return (Vector<String>) new Vector<String>(voms.keySet());
 	}
 
 	@Override
@@ -86,11 +62,16 @@ public class APP extends Node implements IAPP {
 	}
 	
 	public void setMonitorOpen(String monitorOpen) {
-		this.monitorOpen = monitorOpen;
+		if(monitorOpen != null &&
+				(monitorOpen.equals("true") || monitorOpen.equals("false")))
+			this.monitorOpen = monitorOpen;
 	}
 
 	public void setTimeRegulation(String timeRegulation) {
-		this.timeRegulation = timeRegulation;
+		if(timeRegulation != null &&
+				(timeRegulation.equals("0") || timeRegulation.equals("1")
+				|| timeRegulation.equals("2") ||timeRegulation.equals("3")))
+			this.timeRegulation = timeRegulation;
 	}
 	
 	@Override

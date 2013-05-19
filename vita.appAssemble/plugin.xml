@@ -24,10 +24,21 @@
       <editor
             class="com.casa.vide.appassemble.editor.AppAssembleEditor"
             contributorClass="com.casa.vide.appassemble.contributor.AppAssembleActiobBarContributor"
-            default="true"
+            default="false"
             icon="icons/sample.gif"
             id="vita.appassemble.editor.AppAssembleEditor"
             name="AppAssembleEditor">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="com.casa.vide.appassemble.editor.ExpSchemeEditor"
+            contributorClass="com.casa.vide.appassemble.contributor.ExpSchemeActionBarContributor"
+            default="false"
+            icon="icons/sample.gif"
+            id="vita.appassemble.editor.ExpSchemeEditor"
+            name="ExpSchemeEditor">
       </editor>
    </extension>
 

@@ -1,5 +1,6 @@
 package com.casa.vide.appassemble.model;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
@@ -23,9 +24,13 @@ public class Scenario extends Node implements IScenario {
 	}
 
 	@Override
-	public Map<String, IVOM> getVOMs() {  //只是取了APP中的VOM，多个APP中存在相同的String，即多个VOM名字相同， ？？
-		// TODO Auto-generated method stub
-		return null;
+	public Map<String, IVOM> getVOMs() { 
+		//只是取了APP中的VOM，多个APP中存在相同的String，即多个VOM名字相同.创建VOM时控制名字不同
+		Map<String, IVOM> map = new HashMap<String, IVOM>();
+		for(IAPP app : apps) {
+			map.putAll(((APP)app).getVOMs());
+		}
+		return map;
 	}
 
 	@Override
@@ -37,15 +42,17 @@ public class Scenario extends Node implements IScenario {
 	@Override
 	public boolean addChild(Object child) {
 		if(child instanceof IAPP)
-			apps.add((IAPP)child);
-		return super.addChild(child);   //非IAPP孩子也可以，此处没有进行约束，是否需要？？
+			return apps.add((IAPP)child);
+		return false;
+		//return super.addChild(child); 
 	}
 	
 	@Override
 	public boolean removeChild(Object child) {
 		if(child instanceof IAPP)
-			apps.remove((IAPP)child);
-		return super.removeChild(child);
+			return apps.remove((IAPP)child);
+		return true;
+		//return super.removeChild(child);
 	}
 
 }

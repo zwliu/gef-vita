@@ -6,7 +6,8 @@ import java.util.List;
 import org.eclipse.draw2d.IFigure;
 
 import com.casa.vide.appassemble.figure.CircleFigure;
-import com.casa.vide.appassemble.model.VitaEvent;
+import com.casa.vide.appassemble.model.Node;
+import com.casa.vide.appassemble.modelinterface.IElement;
 
 
 public class VitaEventPart extends NodePart {
@@ -19,27 +20,32 @@ public class VitaEventPart extends NodePart {
 	@Override
 	protected void createEditPolicies() {
 		// TODO Auto-generated method stub
-		super.createEditPolicies();  	//½ö½öÊÇlayout
+		super.createEditPolicies();  	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½layout
 	}
 	
 	@Override
 	public void refreshVisuals() {
 		CircleFigure figure = (CircleFigure)getFigure();
-		VitaEvent model = (VitaEvent)getModel();
+		IElement model = (IElement)getModel();
 		figure.setType(model.getType());
-		figure.setLayout(model.getLayout());
+		figure.setInstanceName(model.getInstanceName());
+		figure.setBackgroundColor(((Node)model).getColor());
+		figure.setLayout(((Node)model).getLayout());
 	}
 	
 	@Override
 	public List<Object> getModelChildren() {
-		return ((VitaEvent)getModel()).getChildren();
+		return ((Node)getModel()).getChildren();
 	}
 	
 	@Override
-	public void propertyChange(PropertyChangeEvent arg0) {
-		super.propertyChange(arg0);
-		if(arg0.getPropertyName().equals(VitaEvent.PROPERTY_TYPE))
+	public void propertyChange(PropertyChangeEvent arg0) {	
+		String name = arg0.getPropertyName();
+		if(name.equals(IElement.ATTRIBUTE_EVENTTYPE))
 			refreshVisuals();
+		if(name.equals(IElement.ATTRIBUTE_INSTANCENAME))
+			refreshVisuals();
+		super.propertyChange(arg0);
 	}
 	
 }

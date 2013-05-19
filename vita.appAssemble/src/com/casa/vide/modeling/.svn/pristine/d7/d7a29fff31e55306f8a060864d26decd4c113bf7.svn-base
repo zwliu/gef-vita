@@ -1,0 +1,47 @@
+package com.casa.vide.modeling;
+
+import java.util.Map;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.ResourceUtil;
+
+import com.casa.vide.utils.ConstantStrings;
+import com.casa.vide.wizards.SelectImplWizard;
+import com.casa.vide.wizards.SelectImplWizardPage;
+import com.casa.vimt.Activator;
+
+public class ModelImplementor implements IModelImplementor {
+
+	private Map<String, String> map;
+	
+	@Override
+	public boolean openModelImplWizard(Shell shell, String[] imports, String VomElement) {
+		try {
+			SelectImplWizard wizard = new SelectImplWizard(ResourceUtil
+					.getFile(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getEditorInput())
+					.getProject().getPersistentProperty(new QualifiedName(Activator.PLUGIN_ID,
+							ConstantStrings.MIDDLEWARE_VERSION)),imports, VomElement);
+			WizardDialog dialog = new WizardDialog(shell, wizard);
+			if (dialog.open() == Window.OK) {
+				map = ((SelectImplWizardPage) (wizard.getPage("wizardPage")))
+						.getImportsMap();
+				return true;
+			}
+		} catch (CoreException e) {
+			e.printStackTrace();
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	@Override
+	public Map<String, String> getRequires() {
+		return map;
+	}
+}

@@ -1,0 +1,84 @@
+package com.casa.vide.modeling;
+
+import java.io.File;
+import java.util.Set;
+
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.ResourceUtil;
+
+import com.casa.vide.utils.ConstantStrings;
+import com.casa.vide.wizards.IStorehouseExplorer.Model;
+import com.casa.vide.wizards.SelectModelWizard;
+import com.casa.vimt.Activator;
+
+public class ModelSelector implements IModelSelector {
+
+	private Model model;
+
+	@Override
+	public boolean openModelSelectWizard(Shell shell) {
+		try {
+			SelectModelWizard wizard = new SelectModelWizard(ResourceUtil
+					.getFile(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getEditorInput())
+					.getProject().getPersistentProperty(new QualifiedName(Activator.PLUGIN_ID,ConstantStrings.MIDDLEWARE_VERSION)));
+			WizardDialog dialog = new WizardDialog(shell, wizard);
+			if (dialog.open() == Window.OK) {
+				this.model = wizard.getModel();
+				return true;
+			}
+		} catch (CoreException e) {
+			e.printStackTrace();
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	@Override
+	public String getVdlName() {
+		if (model != null) {
+			String srcPath = model.getSrcPath();
+			if (srcPath.contains(File.separator)) {
+				return srcPath.substring(srcPath.indexOf(File.separator) + 1);
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public String getVomName() {
+		if (model != null) {
+			return model.getName();
+		}
+		return null;
+	}
+
+	@Override
+	public Set<String> getImports() {
+		if (model != null) {
+			return model.getImports();
+		}
+		return null;
+	}
+
+	@Override
+	public Set<String> getVIOs() {
+		if (model != null) {
+			return model.getClasses();
+		}
+		return null;
+	}
+
+	@Override
+	public Set<String> getMessages() {
+		if (model != null) {
+			return model.getMessages();
+		}
+		return null;
+	}
+}

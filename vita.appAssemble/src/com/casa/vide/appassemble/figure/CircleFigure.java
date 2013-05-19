@@ -1,75 +1,59 @@
 package com.casa.vide.appassemble.figure;
 
-import org.eclipse.draw2d.AbstractBorder;
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.Label;
-import org.eclipse.draw2d.ToolbarLayout;
-import org.eclipse.draw2d.geometry.Insets;
-import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.swt.graphics.FontMetrics;
+
+import  com.casa.vide.appassemble.modelinterface.IElement.ModelEventType;;
 
 public class CircleFigure extends Figure {
 	
-	private Label type;
-	
-//	public CircleFigure(EditableLabel name) {
-//        this(name, null);
-//        setOpaque(true);
-//        setBackgroundColor(DPFEditorPreferences.getDefault().getNodeColor());
-//        listenToNodeColorProperty();
-//    }
-//
-//    @SuppressWarnings("rawtypes")
-//    public CircleFigure(EditableLabel name, List colums) {
-//            ToolbarLayout layout = new ToolbarLayout();
-//            layout.setMinorAlignment(ToolbarLayout.ALIGN_CENTER);
-//            layout.setStretchMinorAxis(false);
-//            layout.setSpacing(2);
-//            setLayoutManager(layout);
-//            setBorder(new CircleBorder());
-//            setOpaque(true);
-//            add(name);
-//            nameLabel = name;
-//    }
+	private String type;
+	private String instanceName;
 
-    public class CircleBorder extends AbstractBorder {
-
-            public Insets getInsets(IFigure figure) {
-                    return new Insets(10);
-            }
-
-            public void paint(IFigure figure, Graphics graphics, Insets insets) {
-                    tempRect.setBounds(getPaintRectangle(figure, insets));          
-                    int width = graphics.getLineWidth();
-                    if(width == 0)
-                            width = 1;
-                    tempRect.shrink(width, width);
-                    Point c = tempRect.getCenter();
-                    int r = tempRect.height > tempRect.width ? tempRect.width : tempRect.height;
-                    graphics.drawOval(c.x - r/2, c.y - r/2 , r, r);
-            }
-
-    }
-
-	public CircleFigure() {
-		ToolbarLayout layout = new ToolbarLayout();
-		layout.setHorizontal(false);
-		layout.setMinorAlignment(ToolbarLayout.ALIGN_CENTER);
-        layout.setStretchMinorAxis(false);
-        layout.setSpacing(2);
-		setLayoutManager(layout);
-		type = new Label();
-		add(type);
-		setBorder(new CircleBorder());
-		setOpaque(true);
-	}
-	
 	public void setLayout(Object constraint) {
-		getParent().setConstraint(this, constraint);
+		//getParent().setConstraint(this, constraint);
+		this.setBounds((Rectangle)constraint);
 	}
 	
-	public void setType(String type) {
-		this.type.setText(type);
+	public void setType(ModelEventType type) {
+		this.type = type.toString();	
 	}
+	
+	public void setInstanceName(String instanceName) {
+		this.instanceName = instanceName;
+	}
+	
+	@Override
+	public void repaint() {
+		Rectangle rec = getBounds();
+		if(oldBound.width != rec.width || oldBound.height != rec.height) {			
+			int r = rec.height > rec.width ? rec.height : rec.width;
+			rec.expand((r-rec.width)/2+5, (r-rec.height)/2+5);		
+			oldBound.x = rec.x;
+			oldBound.y = rec.y;
+			oldBound.width = rec.width;
+			oldBound.height = rec.height;
+		} 
+		super.repaint();
+	}
+	
+	private Rectangle oldBound = new Rectangle(0, 0, 0, 0);
+	@Override
+	protected void paintFigure(Graphics graphics) {
+		Rectangle rec = getBounds();
+		graphics.fillOval(rec.getExpanded(-2, -2)); //背景
+		FontMetrics fontMetrics = graphics.getFontMetrics();
+		int w = fontMetrics.getAverageCharWidth();
+		int h = fontMetrics.getHeight();
+		graphics.setForegroundColor(ColorConstants.black);
+		//绘制类型（发布、订阅、未定）及实例名
+		if(type != null) 
+			graphics.drawText(type, rec.x + (rec.width-type.length()*w)/2, rec.y + (rec.height-h*2)/2-2);
+		if(instanceName != null)
+			graphics.drawText(instanceName, rec.x + (rec.width-instanceName.length()*w)/2, rec.y + rec.height/2+2);
+	}
+	
 }
