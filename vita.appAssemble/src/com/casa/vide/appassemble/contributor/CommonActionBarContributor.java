@@ -12,6 +12,11 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.ui.actions.ActionFactory;
 
+/**
+ * 配置有常用编辑功能（undo、redo、delete、zoomin、zoomout）的工具条
+ *
+ * @author lzw
+ */
 public class CommonActionBarContributor extends ActionBarContributor {
 
 

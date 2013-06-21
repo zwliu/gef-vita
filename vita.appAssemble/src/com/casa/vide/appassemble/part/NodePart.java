@@ -19,7 +19,11 @@ import com.casa.vide.appassemble.model.Node;
 import com.casa.vide.appassemble.policy.NodeDeleteEditPolicy;
 import com.casa.vide.appassemble.policy.NodeLayoutEditPolicy;
 
-
+/**
+ * 图元基本模型（Node）的EditPart
+ *
+ * @author lzw
+ */
 public class NodePart extends AbstractGraphicalEditPart implements PropertyChangeListener {
 
 	@Override

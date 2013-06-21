@@ -20,6 +20,11 @@ import com.casa.vide.appassemble.figure.EditableLabel;
 import com.casa.vide.appassemble.model.EditableLabelModel;
 import com.casa.vide.appassemble.policy.EditableLabelDirectEditPolicy;
 
+/**
+ * 可编辑Label的EditPart
+ *
+ * @author lzw
+ */
 public class EditableLabelPart extends NodePart {
 
 	protected DirectEditManager manager;

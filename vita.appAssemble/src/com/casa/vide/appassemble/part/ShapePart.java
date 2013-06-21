@@ -15,10 +15,16 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.requests.DropRequest;
 
 import com.casa.vide.appassemble.figure.shape.ExpRectangleFigure;
+import com.casa.vide.appassemble.model.Connection;
 import com.casa.vide.appassemble.model.Shape;
 import com.casa.vide.appassemble.model.Shape.ShapeType;
 import com.casa.vide.appassemble.policy.ConnectionPolicy;
 
+/**
+ * 实体图元的EditPart
+ *
+ * @author lzw
+ */
 public class ShapePart extends NodePart implements NodeEditPart {
 
 	private List<FixedAnchor> anchors = new ArrayList<FixedAnchor>();
@@ -85,12 +91,26 @@ public class ShapePart extends NodePart implements NodeEditPart {
 	@Override
 	public ConnectionAnchor getSourceConnectionAnchor(
 			ConnectionEditPart connection) {
+		ConnectionAnchor source = null;
+		if (connection instanceof com.casa.vide.appassemble.part.ConnectionEditPart) {
+			Connection conn = (Connection)((com.casa.vide.appassemble.part.ConnectionEditPart)connection).getModel();
+			source = conn.getSourceAnchor();
+		}
+		if(source != null)
+			return source;
 		return anchors.get(0);
 	}
 
 	@Override
 	public ConnectionAnchor getTargetConnectionAnchor(
 			ConnectionEditPart connection) {
+		ConnectionAnchor target = null;
+		if (connection instanceof com.casa.vide.appassemble.part.ConnectionEditPart) {
+			Connection conn = (Connection)((com.casa.vide.appassemble.part.ConnectionEditPart)connection).getModel();
+			target = conn.getTargetAnchor();
+		}
+		if(target != null)
+			return target;
 		return anchors.get(0);
 	}
 

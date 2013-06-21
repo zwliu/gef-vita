@@ -9,12 +9,19 @@ import com.casa.vide.appassemble.figure.CircleFigure;
 import com.casa.vide.appassemble.model.Node;
 import com.casa.vide.appassemble.modelinterface.IElement;
 
-
+/**
+ * VIO/Message图元的EditPart
+ *
+ * @author lzw
+ */
 public class VitaEventPart extends NodePart {
 	
 	@Override
 	public IFigure createFigure() {
-		return new CircleFigure();
+		CircleFigure figure = new CircleFigure();
+		Object model = getModel();
+		figure.setLayout(((Node)model).getLayout());
+		return figure;
 	}
 	
 	@Override
@@ -30,7 +37,6 @@ public class VitaEventPart extends NodePart {
 		figure.setType(model.getType());
 		figure.setInstanceName(model.getInstanceName());
 		figure.setBackgroundColor(((Node)model).getColor());
-		figure.setLayout(((Node)model).getLayout());
 	}
 	
 	@Override
@@ -42,10 +48,11 @@ public class VitaEventPart extends NodePart {
 	public void propertyChange(PropertyChangeEvent arg0) {	
 		String name = arg0.getPropertyName();
 		if(name.equals(IElement.ATTRIBUTE_EVENTTYPE))
+			refreshVisuals();	
+		else if(name.equals(IElement.ATTRIBUTE_INSTANCENAME))
 			refreshVisuals();
-		if(name.equals(IElement.ATTRIBUTE_INSTANCENAME))
-			refreshVisuals();
-		super.propertyChange(arg0);
+		else
+			super.propertyChange(arg0);
 	}
 	
 }

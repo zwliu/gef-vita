@@ -2,6 +2,11 @@ package com.casa.vide.appassemble.modelinterface;
 
 import java.util.Vector;
 
+/**
+ * 应用框架源代码生成接口中的应用图元的接口
+ *
+ * @author lzw
+ */
 public interface IAPP {
 	/** 获取名称*/
 	String getName();

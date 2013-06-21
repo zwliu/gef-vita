@@ -1,6 +1,3 @@
-/*
- * Created on Jul 18, 2004
- */
 package com.casa.vide.appassemble.command;
 
 import org.eclipse.gef.commands.Command;
@@ -8,15 +5,25 @@ import org.eclipse.gef.commands.Command;
 import com.casa.vide.appassemble.model.VOM;
 
 /**
- * Command to change the name field
+ * 改变VOM实例名的命令
  * 
- * @author Phil Zoio
+ * @author lzw
  */
 public class ChangeTableNameCommand extends Command
 {
 
+	/**
+	 * VOM模型对象
+	 */
 	private VOM table;
-	private String name, oldName;
+	/**
+	 * VOM的新实例名
+	 */
+	private String name;
+	/**
+	 * VOM之前的实例名
+	 */
+	private String oldName;
 
 	/**
 	 * @see org.eclipse.gef.commands.Command#execute()
@@ -27,7 +34,8 @@ public class ChangeTableNameCommand extends Command
 	}
 
 	/**
-	 * @return whether we can apply changes
+	 * 命令能否执行
+	 * @return 当新实例名不为null时，返回true
 	 */
 	public boolean canExecute()
 	{
@@ -43,10 +51,10 @@ public class ChangeTableNameCommand extends Command
 	}
 
 	/**
-	 * Sets the new Column name
+	 * 设置新的实例名
 	 * 
 	 * @param string
-	 *            the new name
+	 *            新的实例名
 	 */
 	public void setName(String string)
 	{
@@ -54,10 +62,10 @@ public class ChangeTableNameCommand extends Command
 	}
 
 	/**
-	 * Sets the old Column name
+	 * 设置旧实例名
 	 * 
 	 * @param string
-	 *            the old name
+	 *            旧实例名
 	 */
 	public void setOldName(String string)
 	{
@@ -65,8 +73,9 @@ public class ChangeTableNameCommand extends Command
 	}
 
 	/**
+	 * 设置VOM模型
 	 * @param table
-	 *            The table to set.
+	 *            VOM模型
 	 */
 	public void setTable(VOM table)
 	{

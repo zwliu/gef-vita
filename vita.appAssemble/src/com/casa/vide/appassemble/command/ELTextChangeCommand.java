@@ -4,12 +4,26 @@ import org.eclipse.gef.commands.Command;
 
 import com.casa.vide.appassemble.model.EditableLabelModel;
 
+/**
+ * 改变EditableLabel的内容的命令
+ *
+ * @author lzw
+ */
 public class ELTextChangeCommand extends Command {
 
+	/**
+	 * EditableLabel的模型
+	 */
 	private EditableLabelModel el;
-	private String text, oldText;
+	
+	/** EditableLabel的新内容*/
+	private String text;
+	
+	/**　EditableLabel的旧内容*/
+	private String oldText;
 
 	/**
+	 * 命令执行，设置Editable的内容
 	 * @see org.eclipse.gef.commands.Command#execute()
 	 */
 	public void execute()
@@ -18,7 +32,8 @@ public class ELTextChangeCommand extends Command {
 	}
 
 	/**
-	 * @return whether we can apply changes
+	 * 判断命令能否执行
+	 * @return 新内容不为null时，返回true；否则，返回false
 	 */
 	public boolean canExecute()
 	{
@@ -34,10 +49,10 @@ public class ELTextChangeCommand extends Command {
 	}
 
 	/**
-	 * Sets the new Column text
+	 * 设置新内容
 	 * 
 	 * @param string
-	 *            the new text
+	 *            新内容
 	 */
 	public void setText(String string)
 	{
@@ -45,10 +60,10 @@ public class ELTextChangeCommand extends Command {
 	}
 
 	/**
-	 * Sets the old Column text
+	 * 设置旧内容
 	 * 
 	 * @param string
-	 *            the old text
+	 *            旧内容
 	 */
 	public void setOldText(String string)
 	{
@@ -56,8 +71,9 @@ public class ELTextChangeCommand extends Command {
 	}
 
 	/**
+	 * 设置EditableLanel的模型
 	 * @param table
-	 *            The table to set.
+	 *           EditableLabel的模型
 	 */
 	public void setEL(EditableLabelModel el)
 	{
@@ -65,6 +81,7 @@ public class ELTextChangeCommand extends Command {
 	}
 
 	/**
+	 * 命令撤销
 	 * @see org.eclipse.gef.commands.Command#undo()
 	 */
 	public void undo()

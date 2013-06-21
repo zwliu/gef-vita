@@ -1,6 +1,8 @@
 package com.casa.vide.appassemble.part;
 
 import java.beans.PropertyChangeEvent;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
@@ -10,6 +12,9 @@ import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.ui.views.properties.ComboBoxPropertyDescriptor;
+import org.eclipse.ui.views.properties.IPropertyDescriptor;
+import org.eclipse.ui.views.properties.IPropertySource;
 
 import com.casa.vide.appassemble.directedit.ExtendedDirectEditManager;
 import com.casa.vide.appassemble.directedit.LabelCellEditorLocator;
@@ -18,10 +23,15 @@ import com.casa.vide.appassemble.directedit.ValidationMessageHandler;
 import com.casa.vide.appassemble.editor.ValidationEnabledGraphicalViewer;
 import com.casa.vide.appassemble.figure.EditableLabel;
 import com.casa.vide.appassemble.figure.VOMFigure;
+import com.casa.vide.appassemble.model.NodePropertySource;
 import com.casa.vide.appassemble.model.VOM;
 import com.casa.vide.appassemble.policy.TableDirectEditPolicy;
 
-
+/**
+ * VOM图元的EditPart
+ *
+ * @author lzw
+ */
 public class VOMPart extends NodePart {
 
 	protected DirectEditManager manager;
@@ -65,6 +75,30 @@ public class VOMPart extends NodePart {
 		String name = arg0.getPropertyName();
 		if(name.equals(VOM.PROPERTY_NAME))
 			refreshVisuals();
+		else if(name.equals(VOM.PROPERTY_IMPORTS))
+		{
+			VOM model = (VOM)getModel();
+			Map<String, String> imports = model.getImports();
+			if(imports != null && imports.size() > 0)
+			{
+				String[] values = new String[imports.size()];
+				Iterator<String> keyIterator = imports.keySet().iterator();
+				Iterator<String> valueIterator = imports.values().iterator();
+				for(int i = 0; i < imports.size(); i++)
+				{
+					String str = keyIterator.next();
+					str += " - ";
+					str += valueIterator.next();
+					values[i] = str;
+				}
+				NodePropertySource property = (NodePropertySource)((VOM)getModel()).getAdapter(IPropertySource.class);
+				for(IPropertyDescriptor des : property.getPropertyDescriptors())
+					if(des.getId().equals(VOM.PROPERTY_IMPORTS) && des instanceof ComboBoxPropertyDescriptor)
+					{
+						des = new ComboBoxPropertyDescriptor(VOM.PROPERTY_IMPORTS, "imports", values);						
+					}
+			}
+		}
 		super.propertyChange(arg0);
 	}
 	

@@ -6,7 +6,11 @@ import org.eclipse.gef.requests.GroupRequest;
 
 import com.casa.vide.appassemble.command.NodeDeleteCommand;
 
-
+/**
+ * 删除图元的EditPolicy
+ *
+ * @author lzw
+ */
 public class NodeDeleteEditPolicy extends ComponentEditPolicy {
 
 	@Override

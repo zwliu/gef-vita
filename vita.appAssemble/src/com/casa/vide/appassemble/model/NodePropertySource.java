@@ -1,6 +1,8 @@
 package com.casa.vide.appassemble.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -15,6 +17,11 @@ import org.eclipse.ui.views.properties.TextPropertyDescriptor;
 
 import com.casa.vide.appassemble.modelinterface.IElement;
 
+/**
+ * 图元属性页，该类所有图元的属性编辑功能
+ *
+ * @author lzw
+ */
 public class NodePropertySource implements IPropertySource {
 	
 	private Node node = null;
@@ -29,6 +36,9 @@ public class NodePropertySource implements IPropertySource {
 		return null;
 	}
 
+	/**
+	 * 设置图元属性表
+	 */
 	@Override
 	public IPropertyDescriptor[] getPropertyDescriptors() {
 		// TODO Auto-generated method stub
@@ -50,6 +60,21 @@ public class NodePropertySource implements IPropertySource {
 			else if(node instanceof VOM) {
 				properties.add(new PropertyDescriptor(VOM.PROPERTY_NAME, "name"));
 				properties.add(new TextPropertyDescriptor(VOM.ATTRIBUTE_INSTANCENAME, VOM.ATTRIBUTE_INSTANCENAME));
+				Map<String, String> imports = ((VOM)node).getImports();
+				String[] values = new String[imports.size()];
+				if(imports != null && imports.size() > 0)
+				{					
+					Iterator<String> keyIterator = imports.keySet().iterator();
+					Iterator<String> valueIterator = imports.values().iterator();
+					for(int i = 0; i < imports.size(); i++)
+					{
+						String str = keyIterator.next();
+						str += " - ";
+						str += valueIterator.next();
+						values[i] = str;
+					}
+				}
+				properties.add(new ComboBoxPropertyDescriptor(VOM.PROPERTY_IMPORTS, "imports", values));
 			}
 			else if(node instanceof IElement) {
 				Set<String> names = ((IElement)node).getNames();
@@ -62,6 +87,9 @@ public class NodePropertySource implements IPropertySource {
 		return properties.toArray(new IPropertyDescriptor[0]);
 	}
 
+	/**
+	 * 获取ID为id的属性的值
+	 */
 	@Override
 	public Object getPropertyValue(Object id) {
 		// TODO Auto-generated method stub
@@ -114,6 +142,12 @@ public class NodePropertySource implements IPropertySource {
 			return ((VOM)node).getName();
 		else if(id.equals(VOM.ATTRIBUTE_INSTANCENAME))
 			return ((VOM)node).getInstanceName();
+		else if(id.equals(VOM.PROPERTY_IMPORTS))
+		{
+			if(((VOM)node).getImports().size() > 0)
+				return 0;
+			return -1;
+		}
 		else if(id.equals(IElement.ATRRIBUTE_NAME)) {
 			String name = ((IElement)node).getName();
 			Set<String> names = ((IElement)node).getNames();
@@ -145,6 +179,9 @@ public class NodePropertySource implements IPropertySource {
 		
 	}
 
+	/**
+	 * 设置ID为id的属性的值
+	 */
 	@Override
 	public void setPropertyValue(Object id, Object value) {
 		if(id.equals(Node.ATTRIBUTE_POSITION_X)) {

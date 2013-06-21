@@ -33,11 +33,11 @@ public class TableNameCellEditorValidator implements ICellEditorValidator
 	{
 		String name = (String) value;
 
-		if (name.indexOf(" ") != -1)
-		{
-			String text = "Table name should not include the space character";
-			return setMessageText(text);
-		}
+//		if (name.indexOf(" ") != -1)
+//		{
+//			String text = "Table name should not include the space character";
+//			return setMessageText(text);
+//		}
 
 		if (name.length() == 0)
 		{

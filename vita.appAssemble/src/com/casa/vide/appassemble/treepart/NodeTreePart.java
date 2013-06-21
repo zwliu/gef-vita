@@ -10,16 +10,22 @@ import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.editparts.AbstractTreeEditPart;
 import org.eclipse.gef.tools.SelectEditPartTracker;
 import org.eclipse.ui.IPageLayout;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
+import com.casa.vide.appassemble.config.IconConstant;
 import com.casa.vide.appassemble.model.APP;
+import com.casa.vide.appassemble.model.Message;
 import com.casa.vide.appassemble.model.Node;
+import com.casa.vide.appassemble.model.VIO;
 import com.casa.vide.appassemble.model.VOM;
 
-
+/**
+ * Outline中树形缩进图的TreeEditPart
+ *
+ * @author lzw
+ */
 public class NodeTreePart extends AbstractTreeEditPart implements PropertyChangeListener {
 	
 	@Override
@@ -51,17 +57,30 @@ public class NodeTreePart extends AbstractTreeEditPart implements PropertyChange
 		}
 	}
 	
+	/**
+	 * 设置各图元的文字和图标
+	 */
 	public void refreshVisuals(){ 
 		Object obj = getModel(); 
 		if(obj instanceof APP) {
 			APP model = (APP)obj;
 			setWidgetText(model.getName()); //参数不为null
-			setWidgetImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT));
+			setWidgetImage(IconConstant.appDesSm.createImage());
 		}
-		if(obj instanceof VOM) {
+		else if(obj instanceof VOM) {
 			VOM model = (VOM)obj;
-			setWidgetText(model.getName());   //参数不为null
-			setWidgetImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_DEF_VIEW));
+			setWidgetText(model.getInstanceName());   //参数不为null
+			setWidgetImage(IconConstant.vomDesSm.createImage());
+		}
+		else if(obj instanceof VIO) {
+			VIO model = (VIO)obj;
+			setWidgetText(model.getInstanceName());
+			setWidgetImage(IconConstant.vioDesSm.createImage());
+		}
+		else if(obj instanceof Message) {
+			Message model = (Message)obj;
+			setWidgetText(model.getInstanceName());
+			setWidgetImage(IconConstant.messageDesSm.createImage());
 		}
 	}
 	
@@ -72,7 +91,7 @@ public class NodeTreePart extends AbstractTreeEditPart implements PropertyChange
 	
 	@Override
 	public void performRequest(Request req) {
-		if(req.getType().equals(RequestConstants.REQ_OPEN)) {
+		if(req.getType().equals(RequestConstants.REQ_OPEN)) {  //双击打开属性页
 			IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			try {
 				page.showView(IPageLayout.ID_PROP_SHEET);

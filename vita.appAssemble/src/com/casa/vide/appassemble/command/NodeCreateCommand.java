@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.eclipse.gef.commands.Command;
-import org.eclipse.jface.wizard.WizardDialog;
+//import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
-import com.casa.vide.appassemble.figure.InitElementWizard;
+//import com.casa.vide.appassemble.figure.InitElementWizard;
 import com.casa.vide.appassemble.model.Message;
 import com.casa.vide.appassemble.model.Node;
 import com.casa.vide.appassemble.model.VIO;
@@ -16,19 +16,42 @@ import com.casa.vide.appassemble.model.VOM;
 import com.casa.vide.appassemble.modelinterface.IElement;
 import com.casa.vide.modeling.ModelSelector;
 
+/**
+ * 添加（创建）图元的命令
+ *
+ * @author lzw
+ */
 public class NodeCreateCommand extends Command {
 	
+	/** 父图元模型*/
 	private Node parent = null;
+	
+	/** 子图元模型*/
 	private Node child = null;
 	
+	/**
+	 * 设置父图元模型
+	 *
+	 * @param parent 父图元模型
+	 */
 	public void setParent(Node parent) {
 		this.parent = parent;
 	}
 	
+	/**
+	 *设置子图元模型 
+	 *
+	 * @param child 子图元模型
+	 */
 	public void setChild(Node child) {
 		this.child = child;
 	}
 	
+	/**
+	 * 设置子图元在父图元中的布局约束
+	 *
+	 * @param constraint
+	 */
 	public void setLayout(Object constraint) {
 		if(child == null)
 			return;
@@ -64,7 +87,7 @@ public class NodeCreateCommand extends Command {
 //			((IElement)child).setInstanceName(wizard.getInstanceName());
 //			((IElement)child).setVdlName(((VOM)parent).getVdlName());
 //		}
-		if(child instanceof IElement) {
+		if(child instanceof IElement) {  //设置VIO/Message的VdlName、instanceName、Parent
 			((IElement)child).setVdlName(((VOM)parent).getVdlName());			
 			if(child instanceof VIO) {
 				((IElement)child).setInstanceName("vio"+VIO.getCount());
@@ -75,11 +98,14 @@ public class NodeCreateCommand extends Command {
 				((IElement)child).setParent((VOM)parent);
 			}
 		}
-		else if(child instanceof VOM) 
+		else if(child instanceof VOM)   //
 			openModelSelectWizard((VOM)child);
 		parent.addChild(child);
 	}
 	
+	/**
+	 * 父图元包含子图元时，返回true，命令能够撤销；否则，返回false，不能撤销
+	 */
 	@Override 
 	public boolean canUndo() {
 		if(parent == null || child == null)
@@ -92,6 +118,11 @@ public class NodeCreateCommand extends Command {
 		parent.removeChild(child);
 	}
 	
+	/**
+	 * 在创建VOM模型时初始化VOM图元
+	 *
+	 * @param vom VOM图元模型
+	 */
 	private void openModelSelectWizard(VOM vom) {
 		ModelSelector selector = new ModelSelector();
 		Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor().getSite().getShell();

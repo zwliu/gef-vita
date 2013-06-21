@@ -8,7 +8,11 @@ import org.eclipse.draw2d.IFigure;
 import com.casa.vide.appassemble.figure.APPFigure;
 import com.casa.vide.appassemble.model.APP;
 
-
+/**
+ * APP图元的EditPart
+ *
+ * @author lzw
+ */
 public class APPPart extends NodePart {
 
 	@Override

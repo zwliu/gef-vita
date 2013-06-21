@@ -22,6 +22,7 @@ import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.actions.GEFActionConstants;
 import org.eclipse.gef.ui.actions.ZoomInAction;
 import org.eclipse.gef.ui.actions.ZoomOutAction;
+import org.eclipse.gef.ui.palette.PaletteViewerProvider;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
@@ -31,6 +32,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.actions.ActionFactory;
 
 import com.casa.vide.appassemble.action.ToolBarSaveAction;
+import com.casa.vide.appassemble.config.IconConstant;
 import com.casa.vide.appassemble.directedit.StatusLineValidationMessageHandler;
 import com.casa.vide.appassemble.factory.ExpNodeCreationFactory;
 import com.casa.vide.appassemble.factory.ExpPartCreationFactory;
@@ -64,12 +66,14 @@ public class ExpSchemeEditor extends GraphicalEditorWithFlyoutPalette {
 		root.add(manipulateDrawer);
 		//添加图形工具
 		PaletteDrawer shapesDrawer = new PaletteDrawer("图形");
-		shapesDrawer.add(new CombinedTemplateCreationEntry("矩形", null, Shape.class, new ExpNodeCreationFactory(ShapeType.TYPE_RECTANGLE), null, null));
-		shapesDrawer.add(new CombinedTemplateCreationEntry("标注", null, EditableLabelModel.class, new ExpNodeCreationFactory(EditableLabelModel.class), null, null));
+		shapesDrawer.add(new CombinedTemplateCreationEntry("矩形", null, Shape.class, new ExpNodeCreationFactory(ShapeType.TYPE_RECTANGLE), 
+				IconConstant.rectangleDesSm, IconConstant.rectangleDesLg));
+		shapesDrawer.add(new CombinedTemplateCreationEntry("标注", null, EditableLabelModel.class, new ExpNodeCreationFactory(EditableLabelModel.class), 
+				IconConstant.txtDesSm, IconConstant.txtDesLg));
 		root.add(shapesDrawer);
 		//添加连线工具
 		PaletteDrawer connectionsDrawer = new PaletteDrawer("连线");
-		connectionsDrawer.add(new ConnectionCreationToolEntry("连线", null, null, null, null));
+		connectionsDrawer.add(new ConnectionCreationToolEntry("连线", null, null, IconConstant.lineDesSm, IconConstant.lineDesLg));
 		root.add(connectionsDrawer);
 		//添加图片库
 		PaletteDrawer imageLib = new PaletteDrawer(ImageLibrary.label);
@@ -85,6 +89,11 @@ public class ExpSchemeEditor extends GraphicalEditorWithFlyoutPalette {
 		
 		root.setDefaultEntry(selectionToolEntry);
 		return root;
+	}
+	
+	@Override
+	public PaletteViewerProvider createPaletteViewerProvider() {
+		return new MenuPaletteProvider(getEditDomain());
 	}
 	
 	@Override

@@ -20,7 +20,7 @@ public class ModelImplementor implements IModelImplementor {
 	public Map<String, String> getRequires() {
 		Map<String, String> map = new HashMap<String, String>();
 		for(String str : imports) {
-			map.put(str, str+" Implement");
+			map.put(str, str+" v1.1");
 		}
 		return map;
 	}

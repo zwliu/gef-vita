@@ -3,6 +3,11 @@ package com.casa.vide.appassemble.imageLibrary;
 import java.io.File;
 import java.io.FileFilter;
 
+/**
+ * 图片过滤器，过滤出png、bmp、jpg、jpeg图片。
+ *
+ * @author lzw
+ */
 public class ImageFilter implements FileFilter {
 
 	String[] imageFormat = {".png", ".bmp", ".jpg", ".jpeg"};

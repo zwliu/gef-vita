@@ -1,5 +1,6 @@
 package com.casa.vide.appassemble.policy;
 
+import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.GraphicalNodeEditPolicy;
 import org.eclipse.gef.requests.CreateConnectionRequest;
@@ -9,6 +10,11 @@ import com.casa.vide.appassemble.command.ConnectionCommand;
 import com.casa.vide.appassemble.model.Connection;
 import com.casa.vide.appassemble.model.Shape;
 
+/**
+ * 创建、修改连接的EditPolicy
+ *
+ * @author lzw
+ */
 public class ConnectionPolicy extends GraphicalNodeEditPolicy {
 
 	@Override
@@ -40,6 +46,34 @@ public class ConnectionPolicy extends GraphicalNodeEditPolicy {
 		ConnectionCommand command = new ConnectionCommand();
 		command.setTarget((Shape)getHost().getModel());
 		return command;
+	}
+	
+	/**
+	 * 获取连接源的连接点，并设置为该连接的源连接锚点
+	 */
+	@Override
+	protected ConnectionAnchor getSourceConnectionAnchor(
+			CreateConnectionRequest request) {
+		ConnectionCommand command = (ConnectionCommand)request.getStartCommand();
+		Connection conn = command.getConnection();
+		ConnectionAnchor anchor = super.getSourceConnectionAnchor(request);
+		if (conn != null)
+			conn.setSourceAnchor(anchor); //设置为该连接的源连接锚点
+		return anchor;
+	}
+	
+	/**
+	 * 获取连接目标的连接点，并设置为该连接的目标连接锚点
+	 */
+	@Override
+	protected ConnectionAnchor getTargetConnectionAnchor(
+			CreateConnectionRequest request) {
+		ConnectionCommand command = (ConnectionCommand)request.getStartCommand();
+		Connection conn = command.getConnection();
+		ConnectionAnchor anchor = super.getTargetConnectionAnchor(request);
+		if (conn != null)
+			conn.setTargetAnchor(anchor); //设置为该连接的目标连接锚点
+		return anchor;
 	}
 
 }

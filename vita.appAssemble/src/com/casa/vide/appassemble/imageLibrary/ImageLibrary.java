@@ -17,18 +17,36 @@ import org.eclipse.swt.widgets.FileDialog;
 
 import com.casa.vide.appassemble.factory.ImageFactory;
 
+/**
+ * 图片库
+ *
+ * @author lzw
+ */
 public class ImageLibrary {
 	
+	/** 图片库显示的名称*/
 	public static String label = "图片库";
+	
+	/** 图片库所在的目录*/
 	private static File directory; 
 	static {
 		directory = new File("C:\\Users\\Public\\Pictures\\Sample Pictures");
 	}
-	
+
+	/**
+	 * 获取图片库中的图片文件
+	 *
+	 * @return 返回图片库中的图片文件
+	 */
 	public static File[] getImages() {
 		return directory.listFiles(new ImageFilter());
 	}
 	
+	/**
+	 * 往图片库和PaletteViewer中添加图片
+	 *
+	 * @param viewer PaletteViewer
+	 */
 	public static void addImages(PaletteViewer viewer) {
 		FileDialog dialog = new FileDialog(viewer.getControl().getShell(), SWT.OPEN | SWT.MULTI);
 		dialog.setText("导入图片");
@@ -86,6 +104,10 @@ public class ImageLibrary {
 				}
 			}
 		}
+	}
+	
+	public static void deleteImages() {
+		
 	}
 	
 }

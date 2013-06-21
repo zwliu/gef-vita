@@ -3,9 +3,11 @@ package com.casa.vide.appassemble.factory;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
 
+import com.casa.vide.appassemble.model.Connection;
 import com.casa.vide.appassemble.model.EditableLabelModel;
 import com.casa.vide.appassemble.model.Node;
 import com.casa.vide.appassemble.model.Shape;
+import com.casa.vide.appassemble.part.ConnectionEditPart;
 import com.casa.vide.appassemble.part.EditableLabelPart;
 import com.casa.vide.appassemble.part.NodePart;
 import com.casa.vide.appassemble.part.ShapePart;
@@ -19,6 +21,8 @@ public class ExpPartCreationFactory implements EditPartFactory  {
 			part = new ShapePart();
 		else if(model instanceof EditableLabelModel)
 			part = new EditableLabelPart();
+		else if(model instanceof Connection)
+			part = new ConnectionEditPart();
 		else if(model instanceof Node)
 			part = new NodePart();
 		if(part != null)

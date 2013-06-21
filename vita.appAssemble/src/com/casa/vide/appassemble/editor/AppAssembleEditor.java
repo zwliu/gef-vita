@@ -19,7 +19,6 @@ import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.part.IPageSite;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
@@ -53,12 +52,9 @@ import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gef.palette.SelectionToolEntry;
 import org.eclipse.gef.ui.actions.ActionRegistry;
 import org.eclipse.gef.ui.actions.GEFActionConstants;
-import org.eclipse.gef.ui.actions.SaveAction;
-import org.eclipse.gef.ui.actions.SelectAllAction;
 import org.eclipse.gef.ui.actions.ZoomInAction;
 import org.eclipse.gef.ui.actions.ZoomOutAction;
 import org.eclipse.gef.ui.palette.PaletteViewer;
-import org.eclipse.gef.ui.palette.PaletteViewerProvider;
 import org.eclipse.gef.ui.parts.ContentOutlinePage;
 import org.eclipse.gef.ui.parts.GraphicalEditorWithFlyoutPalette;
 import org.eclipse.gef.ui.parts.TreeViewer;
@@ -84,6 +80,7 @@ import com.casa.vide.appassemble.action.ToolBarSaveAction;
 import com.casa.vide.appassemble.action.ImplementAction;
 import com.casa.vide.appassemble.action.PublishAction;
 import com.casa.vide.appassemble.action.SubscribeAction;
+import com.casa.vide.appassemble.config.IconConstant;
 import com.casa.vide.appassemble.directedit.StatusLineValidationMessageHandler;
 import com.casa.vide.appassemble.factory.NodeCreationFactory;
 import com.casa.vide.appassemble.factory.PartCreationFactory;
@@ -191,21 +188,16 @@ public class AppAssembleEditor extends GraphicalEditorWithFlyoutPalette {
 		//PaletteSeparator separator2 = new PaletteSeparator();
 		//root.add(separator2);
 		
-		//PaletteGroup nodeGroup = new PaletteGroup("Creation d'elements");
+		//PaletteGroup nodeGroup = new PaletteGroup("Creation d'elements");		
 		PaletteDrawer nodeGroup = new PaletteDrawer("模型");
-		root.add(nodeGroup);
-		nodeGroup.add(new CombinedTemplateCreationEntry("APP", "Create APP type", APP.class, new NodeCreationFactory(APP.class), null, null));
-		nodeGroup.add(new CombinedTemplateCreationEntry("VOM", "Create VOM type", VOM.class, new NodeCreationFactory(VOM.class), null, null));
-		nodeGroup.add(new CombinedTemplateCreationEntry("VIO", "Create VIO type", VIO.class, new NodeCreationFactory(VIO.class), null, null));
-		nodeGroup.add(new CombinedTemplateCreationEntry("Message", "Create Message type", Message.class, new NodeCreationFactory(Message.class), null, null));
+		root.add(nodeGroup);		
+		nodeGroup.add(new CombinedTemplateCreationEntry("APP", "Create APP type", APP.class, new NodeCreationFactory(APP.class), IconConstant.appDesSm, IconConstant.appDesLg));
+		nodeGroup.add(new CombinedTemplateCreationEntry("VOM", "Create VOM type", VOM.class, new NodeCreationFactory(VOM.class), IconConstant.vomDesSm, IconConstant.vomDesLg));
+		nodeGroup.add(new CombinedTemplateCreationEntry("VIO", "Create VIO type", VIO.class, new NodeCreationFactory(VIO.class), IconConstant.vioDesSm, IconConstant.vioDesLg));
+		nodeGroup.add(new CombinedTemplateCreationEntry("Message", "Create Message type", Message.class, new NodeCreationFactory(Message.class), IconConstant.messageDesSm, IconConstant.messageDesLg));
 		
 		root.setDefaultEntry(selectionToolEntry);
 		return root;
-	}
-	
-	@Override
-	public PaletteViewerProvider createPaletteViewerProvider() {
-		return new MenuPaletteProvider(getEditDomain());
 	}
 	
 	//@Override

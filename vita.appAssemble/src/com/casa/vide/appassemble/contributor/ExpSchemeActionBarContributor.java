@@ -5,6 +5,11 @@ import org.eclipse.ui.actions.ActionFactory;
 
 import com.casa.vide.appassemble.action.SaveRetargetAction;
 
+/**
+ * 试验系统建模的编辑器的工具条
+ *
+ * @author lzw
+ */
 public class ExpSchemeActionBarContributor extends CommonActionBarContributor {
 
 	
